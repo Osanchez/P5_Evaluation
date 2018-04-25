@@ -22,6 +22,7 @@ public class Evaluation {
         evaluation.readTrecun("evaluation-data/bm25.trecrun");
         //evaluation.printTrecunMap();
         //evaluation.printQueryMap();
+        evaluation.calculateNDCG("african civilian deaths", "1");
 
     }
 
@@ -37,10 +38,14 @@ public class Evaluation {
                 String queryID = splitLine[0];
                 StringBuilder query = new StringBuilder();
                 for(int x = 1; x < splitLine.length; x++) {
-                    query.append(" ").append(splitLine[x]);
+                    if(x < splitLine.length - 1) {
+                        query.append(splitLine[x]).append(" ");
+                    } else {
+                        query.append(splitLine[x]);
+                    }
                 }
                 //add values to hashmap using queryID as key
-                queriesMap.put(queryID, query.toString());
+                queriesMap.put(query.toString(), queryID);
             }
             bufferedReader.close();
         } catch (Exception e) {
@@ -56,16 +61,16 @@ public class Evaluation {
 
             while((line = bufferedReader.readLine()) != null) {
                 //read each line in the trecrun file and split it by column
-                String[] splitLine = line.split(" ");
+                String[] splitLine = line.split("\\s+");
                 String queryID = splitLine[0];
-                String unusedSkip = splitLine[1];
+                String unusedSkip = splitLine[1]; //not used
                 String documentIdentifier = splitLine[2];
                 String rank = splitLine[3];
-                String retrivalModelScore = splitLine[4];
-                String retrivalModel = splitLine[5];
+                String retrievalModelScore = splitLine[4];
+                String retrievalModel = splitLine[5];
 
                 //add values to hashmap using queryID as key
-                String[] mapValues = {unusedSkip, documentIdentifier, rank, retrivalModelScore, retrivalModel};
+                String[] mapValues = {rank, documentIdentifier, retrievalModelScore, retrievalModel};
                 if(trecunMap.containsKey(queryID)) {
                     trecunMap.get(queryID).add(mapValues);
                 } else {
@@ -80,16 +85,25 @@ public class Evaluation {
         }
     }
 
+    //average precision values
+    private void calculateNDCG(String query, String Rankposition) {
+        if(queriesMap.get(query) == null) {
+            throw new Error("Query not found");
+        }
+        String queryID = queriesMap.get(query);
+        System.out.println(queryID);
+    }
+
     private void printTrecunMap() {
         for(Map.Entry entry: trecunMap.entrySet()) {
             String key = (String) entry.getKey();
             ArrayList value = (ArrayList) entry.getValue();
-            System.out.print(key + ":[");
+            System.out.print(key + " ");
             for(Object index: value) {
                 String[] fixedIndex = (String[]) index;
                 System.out.print(Arrays.toString(fixedIndex));
             }
-            System.out.print("]\n");
+            System.out.print("\n");
         }
     }
 
@@ -97,7 +111,7 @@ public class Evaluation {
         for(Map.Entry entry: queriesMap.entrySet()) {
             String key = (String) entry.getKey();
             String value = (String) entry.getValue();
-            System.out.println(key + value);
+            System.out.println(key + ":[" + value + "]");
         }
     }
 
