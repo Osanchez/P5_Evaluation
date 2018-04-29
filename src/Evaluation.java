@@ -1,5 +1,4 @@
 import java.io.*;
-import java.security.KeyStore;
 import java.util.*;
 
 public class Evaluation {
@@ -18,12 +17,18 @@ public class Evaluation {
         evaluation.readQueries("evaluation-data/queries");
         evaluation.readTrecun("evaluation-data/bm25.trecrun");
         evaluation.readRelevance("evaluation-data/qrels");
+
+        //NDCG@15 bm25
+        double averageNDCG = 0.00;
+        for(Map.Entry entry: evaluation.queriesMap.entrySet()) {
+            averageNDCG += evaluation.calculateNDCG(entry.getKey().toString(), 15);
+        }
+        averageNDCG = averageNDCG/evaluation.queriesMap.size();
+        System.out.println("bm25.trecrun NDCG@15 " + averageNDCG);
+
         //evaluation.printTrecunMap();
         //evaluation.printQueryMap();
         //evaluation.printRelevance();
-        for(Map.Entry entry: evaluation.queriesMap.entrySet()) {
-            evaluation.calculateNDCG(entry.getKey().toString(), 15);
-        }
     }
 
     private void readQueries(String queryFile) {
