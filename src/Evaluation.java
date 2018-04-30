@@ -13,18 +13,58 @@ public class Evaluation {
     }
 
     public static void main(String[] args) throws IOException {
-        Evaluation evaluation = new Evaluation();
-        evaluation.readQueries("evaluation-data/queries");
-        evaluation.readTrecun("evaluation-data/bm25.trecrun");
-        evaluation.readRelevance("evaluation-data/qrels");
-
         //NDCG@15 bm25
-        double averageNDCG = 0.00;
-        for(Map.Entry entry: evaluation.queriesMap.entrySet()) {
-            averageNDCG += evaluation.calculateNDCG(entry.getKey().toString(), 15);
+        Evaluation NDCG_bm25 = new Evaluation();
+        NDCG_bm25.readQueries("evaluation-data/queries");
+        NDCG_bm25.readTrecun("evaluation-data/bm25.trecrun");
+        NDCG_bm25.readRelevance("evaluation-data/qrels");
+
+        double averageNDCG_bm25 = 0.00;
+        for(Map.Entry entry: NDCG_bm25.queriesMap.entrySet()) {
+            averageNDCG_bm25 += NDCG_bm25.calculateNDCG(entry.getKey().toString(), 15);
         }
-        averageNDCG = averageNDCG/evaluation.queriesMap.size();
-        System.out.println("bm25.trecrun NDCG@15 " + averageNDCG);
+        averageNDCG_bm25 = averageNDCG_bm25/NDCG_bm25.queriesMap.size();
+        System.out.println("bm25.trecrun NDCG@15 " + averageNDCG_bm25);
+        //----------------------------------------------------------------------------------------------
+        //NDCG@15 ql
+        Evaluation NDCG_ql = new Evaluation();
+        NDCG_ql.readQueries("evaluation-data/queries");
+        NDCG_ql.readTrecun("evaluation-data/ql.trecrun");
+        NDCG_ql.readRelevance("evaluation-data/qrels");
+
+        double averageNDCG_ql = 0.00;
+        for(Map.Entry entry: NDCG_ql.queriesMap.entrySet()) {
+            averageNDCG_ql += NDCG_ql.calculateNDCG(entry.getKey().toString(), 15);
+        }
+        averageNDCG_ql = averageNDCG_ql/NDCG_ql.queriesMap.size();
+        System.out.println("ql.trecrun NDCG@15 " + averageNDCG_ql);
+        //----------------------------------------------------------------------------------------------
+        //NDCG@15 SDM
+        Evaluation NDCG_SDM = new Evaluation();
+        NDCG_SDM.readQueries("evaluation-data/queries");
+        NDCG_SDM.readTrecun("evaluation-data/sdm.trecrun");
+        NDCG_SDM.readRelevance("evaluation-data/qrels");
+
+        double averageNDCG_SDM = 0.00;
+        for(Map.Entry entry: NDCG_SDM.queriesMap.entrySet()) {
+            averageNDCG_SDM += NDCG_SDM.calculateNDCG(entry.getKey().toString(), 15);
+        }
+        averageNDCG_SDM = averageNDCG_SDM/NDCG_SDM.queriesMap.size();
+        System.out.println("sdm.trecrun NDCG@15 " + averageNDCG_SDM);
+        //----------------------------------------------------------------------------------------------
+        //NDCG@15 stress
+        Evaluation NDCG_stress = new Evaluation();
+        NDCG_stress.readQueries("evaluation-data/queries");
+        NDCG_stress.readTrecun("evaluation-data/stress.trecrun");
+        NDCG_stress.readRelevance("evaluation-data/qrels");
+
+        double averageNDCG_stress = 0.00;
+        for(Map.Entry entry: NDCG_stress.queriesMap.entrySet()) {
+            averageNDCG_stress += NDCG_stress.calculateNDCG(entry.getKey().toString(), 15);
+        }
+        averageNDCG_stress = averageNDCG_stress/NDCG_stress.queriesMap.size();
+        System.out.println("stress.trecrun NDCG@15 " + averageNDCG_stress);
+        //----------------------------------------------------------------------------------------------
 
         //evaluation.printTrecunMap();
         //evaluation.printQueryMap();
